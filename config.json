@@ -1,0 +1,39 @@
+{
+  "pendulum": {
+    "suspension_point": {"x": 0.0, "y": 0.0, "z": 10.0},
+    "mass": 1.0,
+    "approximate": "Rigour"
+  },
+  "magnets": [
+    {
+      "position": {"x": 3.0, "y": 0.0, "z": -0.3},
+      "velocity": {"x": 0.0, "y": 0.0, "z": 0.0},
+      "direction": "Positive",
+      "strength": 5.0
+    },
+    {
+      "position": {"x": 0.927, "y": 2.853, "z": -0.3},
+      "velocity": {"x": 0.0, "y": 0.0, "z": 0.0},
+      "direction": "Positive",
+      "strength": 5.0
+    },
+    {
+      "position": {"x": -2.427, "y": 1.763, "z": -0.3},
+      "velocity": {"x": 0.0, "y": 0.0, "z": 0.0},
+      "direction": "Positive",
+      "strength": 5.0
+    },
+    {
+      "position": {"x": -2.427, "y": -1.763, "z": -0.3},
+      "velocity": {"x": 0.0, "y": 0.0, "z": 0.0},
+      "direction": "Positive",
+      "strength": 5.0
+    },
+    {
+      "position": {"x": 0.927, "y": -2.853, "z": -0.3},
+      "velocity": {"x": 0.0, "y": 0.0, "z": 0.0},
+      "direction": "Positive",
+      "strength": 5.0
+    }
+  ]
+}
