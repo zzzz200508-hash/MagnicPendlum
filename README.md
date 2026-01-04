@@ -129,5 +129,10 @@ cargo run --release
 * **中心区域**: 如果参数设置得当，中心区域将呈现出复杂的纠缠态，反映出摆球在多个磁铁间极其敏感的平衡选择。
 
 ---
+一些生成的图片示例：
+<img width="2000" height="2000" alt="magnetic_fractal-3 1" src="https://github.com/user-attachments/assets/135b06cc-199d-4ad5-9529-7c4fffdaa887" />
+<img width="2000" height="2000" alt="image" src="https://github.com/user-attachments/assets/5b1328f9-5444-4fd0-92af-9254add9d40f" />
+
+
 
 *文档生成时间: 2026-01-04*
