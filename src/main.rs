@@ -17,9 +17,9 @@ use crate::simulation::{SimConfig, SimResult, EndReason};
 // ==========================================
 // 全局配置：图像分辨率
 // ==========================================
-const WIDTH: u32 = 3000;
-const HEIGHT: u32 = 3000;
-const OUTPUT_FILENAME: &str = "magnetic_fractal.png";
+const WIDTH: u32 = 2000;
+const HEIGHT: u32 = 2000;
+const OUTPUT_FILENAME: &str = "magnetic_fractal-5.2.png";
 
 // ==========================================
 // 调色板 (对应不同的磁铁索引)
@@ -63,7 +63,7 @@ fn main() {
     let escape_thresholds = lyapunov_function::calculate_escape_thresholds(&system);
 
     // 自动规划物理坐标范围 (padding 1.2 倍)
-    let bounds = lyapunov_function::suggest_simulation_bounds(&system, 0.5, 0.5); // padding=0.2, height_ratio=0.2
+    let bounds = lyapunov_function::suggest_simulation_bounds(&system, 0.2, 0.2); // padding=0.2, height_ratio=0.2
     let (min_x, max_x, min_y, max_y) = bounds;
 
     println!("Physics Bounds: X[{:.2}, {:.2}], Y[{:.2}, {:.2}]", min_x, max_x, min_y, max_y);
@@ -74,11 +74,11 @@ fn main() {
     // 但为了方便闭包调用，直接引用即可
 
     let sim_config = SimConfig {
-        time_step: 0.01,        // dt
-        max_steps: 5000,        // 最大迭代步数
+        time_step: 0.02,        // dt
+        max_steps: 10000,        // 最大迭代步数
         capture_radius: 0.15,   // 物理接触半径
         basin_radius: 2.0,      // 能量判定半径 (进入此范围开始检查能量)
-        check_interval: 5,     // 每10步检查一次
+        check_interval: 20,     // 每10步检查一次
     };
 
     //自适应着色器
@@ -112,6 +112,43 @@ fn main() {
         .template("[{elapsed_precise}] {bar:40.cyan/blue} {pos}/{len} ({eta})")
         .unwrap()
         .progress_chars("=>-"));
+
+    //纯黑故障排查
+    println!("--- Diagnostic Probe Start ---");
+    {
+        // 模拟图像中心的点
+        let debug_x = (min_x + max_x) / 2.0;
+        let debug_y = (min_y + max_y) / 2.0;
+
+        // 计算 Z 轴 (复用你的投影逻辑)
+        let start_pos = if let crate::physicial_structs::Approximate::Rigour = system.pendulum.approximate {
+            let l = system.pendulum.suspension_point.z;
+            let r_sq = (debug_x - system.pendulum.suspension_point.x).powi(2) + (debug_y - system.pendulum.suspension_point.y).powi(2);
+            let z = system.pendulum.suspension_point.z - (l * l - r_sq).sqrt();
+            Vector3D::new(debug_x, debug_y, z)
+        } else {
+            Vector3D::new(debug_x, debug_y, 0.1)
+        };
+
+        println!("Probing Center Point: {:?}", start_pos);
+
+        let result = simulation::run_simulation(
+            &system,
+            start_pos,
+            &sim_config,
+            &escape_thresholds,
+            bounds
+        );
+
+        println!("Diagnostic Result: {:?}", result);
+
+        match result.captured_magnet_index {
+            Some(idx) => println!("-> Converged to Magnet {}", idx),
+            None => println!("-> FAILED to converge. Reason: {:?}", result.end_reason),
+        }
+    }
+    println!("--- Diagnostic Probe End ---");
+    //排查结束
 
     // 5. 并行计算循环 (Rayon Magic)
     // chunks_exact_mut(3) 每次拿到一个 RGB 像素的 slice
@@ -184,6 +221,15 @@ fn main() {
                     },
                     None => [0, 0, 0] // 未收敛显示黑色
                 };
+                pixel[0] = color[0];
+                pixel[1] = color[1];
+                pixel[2] = color[2];
+
+            } else {
+                // 可选：对于超出球面投影范围的角落，渲染为白色
+                pixel[0] = 255;
+                pixel[1] = 255;
+                pixel[2] = 255;
             }
         });
 

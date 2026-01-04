@@ -75,16 +75,16 @@ pub fn run_simulation(
             let current_pos = solver.state[0];
             let current_vel = solver.state[1];
 
-            //边界检查（已移除对运动中摆的边界检查）
-            //if current_pos.x < min_x || current_pos.x > max_x ||
-            //    current_pos.y < min_y || current_pos.y > max_y {
-            //    return SimResult {
-            //        captured_magnet_index: None,
-            //        final_position: current_pos,
-            //        steps_taken: step,
-            //        end_reason: EndReason::OutOfBounds,
-            //    };
-            //}
+            //边界检查（已移除对运动中摆的边界检查，更改为更宽泛的检查）
+            if current_pos.x < 2.0*min_x || current_pos.x > 2.0*max_x ||
+                current_pos.y < 2.0*min_y || current_pos.y > 2.0*max_y {
+                return SimResult {
+                    captured_magnet_index: None,
+                    final_position: current_pos,
+                    steps_taken: step,
+                    end_reason: EndReason::OutOfBounds,
+                };
+            }
 
             // B. 寻找最近的磁铁
             let mut closest_magnet_idx = None;
