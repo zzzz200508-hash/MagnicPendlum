@@ -1,9 +1,3 @@
-恭喜你！这是一个非常硬核且功能完备的非线性动力学模拟项目。为了让别人（或者未来的你自己）更好地理解这个程序的独特之处，我为你草拟了一份详细的 Markdown 文档。
-
-你可以将以下内容保存为 `README.md` 或 `DOCUMENTATION.md`。
-
----
-
 # Magnetic Pendulum Fractal Generator (Rust Implementation)
 
 这是一个基于 Rust 语言编写的高性能磁摆（Magnetic Pendulum）混沌分形生成器。该程序通过数值模拟受重力和多点磁力共同作用下的刚体摆运动，绘制出精细的动力学吸引域（Basins of Attraction）分形图像。
